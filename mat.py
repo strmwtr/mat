@@ -1,6 +1,10 @@
 import arcpy
+import os
 
 MAT = r'Database Connections\Connection to GISPRDDB direct connect.sde\cvGIS.CITY.MASTERADDRESS'
+#edit = arcpy.da.Editor(os.path.dirname(MAT))
+#edit.startEditing(True,True)
+#edit.startOperation()
 #MATc = r'C:\Users\brownr\Desktop\db\clean\clean.gdb\mat_clean'
 #MAT = r'C:\Users\brownr\Desktop\db\clean\clean.gdb\mat'
 edit_fields = ['ST_NUMBER', 'ST_UNIT', 'UNIT_TYPE']
@@ -48,15 +52,18 @@ def pound_to_unit():
 
 def print_stuff():
   special = ['BACKFLOW', 'BSMT', 'COTT', 'DOWN', 'GARG', 'UP','UPPER']
-  with arcpy.da.UpdateCursor(MAT, ['UNIT_TYPE','ST_UNIT']) as cursor:
+  with arcpy.da.SearchCursor(MAT, ['UNIT_TYPE','ST_UNIT']) as cursor:
     for row in cursor:
       # Changes # A to UNIT A
-      if row[0] == '' and row[1] != '' and row[1] not in special:
+      if row[0] == '#' and row[1].isalpha():
         print row
 
 def calls():
   strip_all()
-  clean_unit()
-  pound_to_unit()
+  #clean_unit()
+  #pound_to_unit()
 
-calls()
+print_stuff()
+
+#edit.stopOperation()
+#edit.stopEditing(True)
